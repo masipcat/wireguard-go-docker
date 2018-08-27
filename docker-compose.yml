@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  wireguard:
+    build: .
+    cap_add:
+     - NET_ADMIN
+     - SYS_ADMIN
+    volumes:
+     - /dev/net/tun:/dev/net/tun
+     - ./wireguard:/etc/wireguard
+    ports:
+     - 51820:51820/udp
+    restart: always
