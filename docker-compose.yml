@@ -1,13 +1,17 @@
 version: '3.3'
 services:
   wireguard:
-    build: .
+    image: masipcat/wireguard-go:latest
     cap_add:
      - NET_ADMIN
-     - SYS_ADMIN
+    sysctls:
+     - net.ipv4.ip_forward=1
     volumes:
      - /dev/net/tun:/dev/net/tun
      - ./wireguard:/etc/wireguard
+    environment:
+     - WG_COLOR_MODE=always
+     - LOG_LEVEL=info
     ports:
      - 51820:51820/udp
     restart: always

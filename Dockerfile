@@ -1,15 +1,28 @@
-FROM golang:1.11.0-alpine3.8
+FROM golang:1.12.1-alpine3.9 as builder
 
-RUN apk update && apk add git curl build-base libmnl-dev iptables
+ARG tag=0.0.20181222
 
-RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+RUN apk add --update git build-base libmnl-dev iptables
 
-RUN git clone https://git.zx2c4.com/wireguard-go && cd wireguard-go && make && make install
+RUN git clone https://git.zx2c4.com/wireguard-go && \
+    cd wireguard-go && \
+    git checkout $tag && \
+    make && \
+    make install
 
-RUN git clone https://git.zx2c4.com/WireGuard && cd WireGuard/src && make tools && make -C tools install
+ENV WITH_WGQUICK=yes
+RUN git clone https://git.zx2c4.com/WireGuard && \
+    cd WireGuard/src && \
+    make tools && \
+    make -C tools install
 
-ENV LOG_LEVEL=debug
+FROM alpine:3.9
+
+RUN apk add --update bash libmnl iptables
+
+COPY --from=builder /usr/bin/wireguard-go /usr/bin/wg* /usr/bin/
+COPY entrypoint.sh /entrypoint.sh
+
 ENV WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
 
-ENTRYPOINT ["wireguard-go", "-f", "wg0"]
-
+ENTRYPOINT ["/entrypoint.sh"]
