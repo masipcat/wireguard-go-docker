@@ -25,4 +25,4 @@ COPY entrypoint.sh /entrypoint.sh
 
 ENV WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
