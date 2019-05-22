@@ -1,6 +1,6 @@
 FROM golang:1.12.1-alpine3.9 as builder
 
-ARG tag=0.0.20190409
+ARG tag=v0.0.20190517
 
 RUN apk add --update git build-base libmnl-dev iptables
 
