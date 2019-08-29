@@ -1,6 +1,6 @@
-FROM golang:1.12.1-alpine3.9 as builder
+FROM golang:1.12-alpine3.10 as builder
 
-ARG tag=v0.0.20190517
+ARG tag=v0.0.20190805
 
 RUN apk add --update git build-base libmnl-dev iptables
 
@@ -13,12 +13,12 @@ RUN git clone https://git.zx2c4.com/wireguard-go && \
 ENV WITH_WGQUICK=yes
 RUN git clone https://git.zx2c4.com/WireGuard && \
     cd WireGuard && \
-    git checkout 0.0.20190406 && \
+    git checkout 0.0.20190702 && \
     cd src && \
     make tools && \
     make -C tools install
 
-FROM alpine:3.9
+FROM alpine:3.10
 
 RUN apk add --update bash libmnl iptables
 
