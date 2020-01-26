@@ -1,7 +1,7 @@
-FROM golang:1.13-alpine3.10 as builder
+FROM golang:1.13-alpine3.11 as builder
 
-ARG wg_go_tag=v0.0.20191012
-ARG wg_tag=0.0.20190702
+ARG wg_go_tag=v0.0.20200121
+ARG wg_tools_tag=v1.0.20200121
 
 RUN apk add --update git build-base libmnl-dev iptables
 
@@ -12,14 +12,14 @@ RUN git clone https://git.zx2c4.com/wireguard-go && \
     make install
 
 ENV WITH_WGQUICK=yes
-RUN git clone https://git.zx2c4.com/WireGuard && \
-    cd WireGuard && \
+RUN git clone https://git.zx2c4.com/wireguard-tools && \
+    cd wireguard-tools && \
     git checkout $wg_tag && \
     cd src && \
-    make tools && \
-    make -C tools install
+    make && \
+    make install
 
-FROM alpine:3.10
+FROM alpine:3.11
 
 RUN apk add --update bash libmnl iptables
 
