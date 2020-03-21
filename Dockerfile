@@ -1,7 +1,7 @@
-FROM golang:1.13-alpine3.11 as builder
+FROM golang:1.14.1-alpine3.11 as builder
 
-ARG wg_go_tag=v0.0.20200121
-ARG wg_tools_tag=v1.0.20200121
+ARG wg_go_tag=v0.0.20200320
+ARG wg_tools_tag=v1.0.20200319
 
 RUN apk add --update git build-base libmnl-dev iptables
 
