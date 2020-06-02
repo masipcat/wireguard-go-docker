@@ -1,1 +1,6 @@
 .git
+docker-compose.yml
+Dockerfile
+LICENSE
+README
+wireguard/
