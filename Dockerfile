@@ -21,7 +21,7 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
 
 FROM alpine:3.11
 
-RUN apk add --no-cache --update bash libmnl iptables openresolv
+RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2
 
 COPY --from=builder /usr/bin/wireguard-go /usr/bin/wg* /usr/bin/
 COPY entrypoint.sh /entrypoint.sh

@@ -35,6 +35,8 @@ services:
      - LOG_LEVEL=info
     ports:
      - 51820:51820/udp
+    # Uncomment the following line when 'AllowedIPs' is '0.0.0.0/0'
+    # privileged: true
     restart: always
 ```
 
