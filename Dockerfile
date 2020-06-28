@@ -1,4 +1,4 @@
-FROM golang:1.14.1-alpine3.11 as builder
+FROM golang:1.14.4-alpine3.12 as builder
 
 ARG wg_go_tag=v0.0.20200320
 ARG wg_tools_tag=v1.0.20200513
@@ -19,7 +19,7 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
     make && \
     make install
 
-FROM alpine:3.11
+FROM alpine:3.12
 
 RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2
 
