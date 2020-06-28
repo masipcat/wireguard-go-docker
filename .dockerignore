@@ -3,4 +3,5 @@ docker-compose.yml
 Dockerfile
 LICENSE
 README
+Makefile
 wireguard/

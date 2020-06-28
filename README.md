@@ -1,5 +1,7 @@
 # wireguard-go docker
 
+[![](https://images.microbadger.com/badges/version/masipcat/wireguard-go.svg)](https://microbadger.com/images/masipcat/wireguard-go "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/masipcat/wireguard-go.svg)](https://microbadger.com/images/masipcat/wireguard-go "Get your own image badge on microbadger.com")
+
 ## Setup
 
 First of all you need a key pair for the server. Use the following command to generate the public and private keys:
