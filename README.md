@@ -73,7 +73,7 @@ data:
     Address = 10.33.0.1/24
     ListenPort = 51820
     PostUp = wg set wg0 private-key /etc/wireguard/privatekey && iptables -t nat -A POSTROUTING -s 10.33.0.0/24 -o eth0 -j MASQUERADE
-    PostDown = iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+    PostDown = iptables -t nat -D POSTROUTING -s 10.33.0.0/24 -o eth0 -j MASQUERADE
 
     # [Peer]
     # PublicKey =
