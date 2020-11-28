@@ -11,7 +11,7 @@ First of all you need a key pair for the server. Use the following command to ge
 docker run --rm -i masipcat/wireguard-go wg genkey > privatekey
 
 # Generate publickey from privatekey
-docker run --rm -i masipcat/wireguard-go wg genkey < privatekey > publickey
+docker run --rm -i masipcat/wireguard-go wg pubkey < privatekey > publickey
 ```
 
 ## Run server
