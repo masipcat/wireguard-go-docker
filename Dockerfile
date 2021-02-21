@@ -1,8 +1,8 @@
 ARG ARCH=
 
-FROM ${ARCH}golang:1.15.5-alpine3.12 as builder
+FROM ${ARCH}golang:1.16.0-alpine3.13 as builder
 
-ARG wg_go_tag=v0.0.20201118
+ARG wg_go_tag=0.0.20210212
 ARG wg_tools_tag=v1.0.20200827
 
 RUN apk add --update git build-base libmnl-dev iptables
@@ -21,7 +21,7 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
     make && \
     make install
 
-FROM ${ARCH}alpine:3.12
+FROM ${ARCH}alpine:3.13
 
 RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2
 
