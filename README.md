@@ -1,6 +1,6 @@
 # wireguard-go docker
 
-[![](https://images.microbadger.com/badges/version/masipcat/wireguard-go.svg)](https://hub.docker.com/r/masipcat/wireguard-go/tags) [![](https://images.microbadger.com/badges/image/masipcat/wireguard-go.svg)](https://hub.docker.com/r/masipcat/wireguard-go/tags)
+[![](https://img.shields.io/docker/v/masipcat/wireguard-go.svg?sort=semver)](https://hub.docker.com/r/masipcat/wireguard-go/tags) [![](https://img.shields.io/docker/pulls/masipcat/wireguard-go.svg)](https://hub.docker.com/r/masipcat/wireguard-go/tags) [![](https://img.shields.io/docker/image-size/masipcat/wireguard-go.svg)](https://hub.docker.com/r/masipcat/wireguard-go/tags)
 
 ## Setup
 
