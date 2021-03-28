@@ -1,9 +1,9 @@
 ARG ARCH=
 
-FROM ${ARCH}golang:1.16.0-alpine3.13 as builder
+FROM ${ARCH}golang:1.16.2-alpine3.13 as builder
 
-ARG wg_go_tag=0.0.20210212
-ARG wg_tools_tag=v1.0.20200827
+ARG wg_go_tag=0.0.20210323
+ARG wg_tools_tag=v1.0.20210315
 
 RUN apk add --update git build-base libmnl-dev iptables
 
