@@ -1,6 +1,6 @@
 ARG ARCH=
 
-FROM ${ARCH}golang:1.16.2-alpine3.13 as builder
+FROM ${ARCH}golang:1.16.5-alpine3.13 as builder
 
 ARG wg_go_tag=0.0.20210323
 ARG wg_tools_tag=v1.0.20210315
