@@ -1,6 +1,8 @@
 ARG ARCH=
+ARG GOLANG_VERSION=1.16.5
+ARG ALPINE_VERSION=3.13
 
-FROM ${ARCH}golang:1.16.5-alpine3.13 as builder
+FROM ${ARCH}golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION}} as builder
 
 ARG wg_go_tag=0.0.20210424
 ARG wg_tools_tag=v1.0.20210424
@@ -21,7 +23,7 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
     make && \
     make install
 
-FROM ${ARCH}alpine:3.13
+FROM ${ARCH}alpine:${ALPINE_VERSION}}
 
 RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2
 
