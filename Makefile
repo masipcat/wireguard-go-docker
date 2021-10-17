@@ -5,7 +5,7 @@ DOCKER_REGISTRY ?= masipcat/wireguard-go
 build:
 	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 	docker build -t ${DOCKER_REGISTRY}:${TAG}-amd64 --build-arg ARCH=amd64/ .
-	docker build -t ${DOCKER_REGISTRY}:${TAG}-arm32v6 --build-arg ARCH=arm32v6/ --build-arg ALPINE_VERSION=3.12 .
+	docker build -t ${DOCKER_REGISTRY}:${TAG}-arm32v6 --build-arg ARCH=arm32v6/ .
 	docker build -t ${DOCKER_REGISTRY}:${TAG}-arm32v7 --build-arg ARCH=arm32v7/ .
 	docker build -t ${DOCKER_REGISTRY}:${TAG}-arm64v8 --build-arg ARCH=arm64v8/ .
 
