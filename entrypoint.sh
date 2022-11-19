@@ -1,17 +1,30 @@
 #!/bin/bash
 
+WG_INAME=${WG_INAME:-wg0}
+WG_CONF_DIR=${WG_CONF_DIR:-/etc/wireguard/}
+
+WG_CONF="${WG_CONF_DIR}${WG_INAME}.conf"
+WG_CONF_TMP="${WG_CONF}.tmp"
+WG_CONF_BK="${WG_CONF}.bk"
+
+WG_CONF_URL="${WG_CONF_URL:-}"
+WG_CONF_AUTH_TOKEN="${WG_CONF_AUTH_TOKEN:-}"
+
 finish () {
     wg-quick down wg0
     exit 0
 }
+
 trap finish SIGTERM SIGINT SIGQUIT SIGHUP
 
 wg_up () {
     echo "wireguard starting.."
 
-    wg-quick up /etc/wireguard/wg0.conf
+    wg-quick up $WG_CONF
 
-    if [ $? -ne 0 ]; then
+    if [ $? -eq 0 ]; then
+        wg_backup
+    else
         wg_restore
 
         if [ $? -eq 0 ]; then
@@ -20,17 +33,17 @@ wg_up () {
             echo "wireguard: unable to start"
             exit 1;
         fi
-    else
-        wg_backup
     fi
 }
 
 wg_sync () {
     echo "wireguard syncing.."
 
-    wg syncconf wg0 <(wg-quick strip wg0)
+    wg syncconf $WG_INAME <(wg-quick strip $WG_INAME)
 
-    if [ $? -ne 0 ]; then
+    if [ $? -eq 0 ]; then
+        wg_backup
+    else
         wg_restore
 
         if [ $? -eq 0 ]; then
@@ -39,15 +52,14 @@ wg_sync () {
             echo "wireguard: unable to sync"
             exit 1;
         fi
-    else
-        wg_backup
     fi
 }
 
 wg_backup() {
-    if [ -f /etc/wireguard/wg0.conf ]; then
-        cp /etc/wireguard/wg0.conf $WG_CONF_BK
-        echo "wireguard backup created"
+    if [ -f $WG_CONF ]; then
+        echo "wireguard creating backup"
+
+        cp $WG_CONF $WG_CONF_BK
         return $?
     fi
 
@@ -56,50 +68,72 @@ wg_backup() {
 
 wg_restore () {
     if [ -f "$WG_CONF_BK" ]; then
-        mv $WG_CONF_BK /etc/wireguard/wg0.conf
-        echo "wireguard backup restored"
+        echo "wireguard restoring from backup"
+
+        mv $WG_CONF_BK $WG_CONF
         return $?
     fi
 
     return 1
 }
 
-get_config () {
-    curl --silent --output "$WG_CONF_TMP" "$WG_CONF_URL"
-    checksum=$(md5sum "$WG_CONF_TMP" | awk '{print $1}')
-    echo "$checksum"
-}
+if [ -f $WG_CONF ]; then
 
-WG_CONF_TMP='wg0.conf.tmp'
-WG_CONF_BK='wg0.conf.bk'
-
-if [ -f /etc/wireguard/wg0.conf ]; then
     wg_up
+
 elif [[ ! "$WG_CONF_URL" ]]; then
-    echo "No config found"
+    echo "wireguard config not found"
     exit 1;
 fi
 
 if [[ "$WG_CONF_URL" ]]; then
-    echo "Auto-config mode"
+    echo "Wireguard auto-config mode"
 
-    while sleep 2; do
-        current_md5=$(md5sum /etc/wireguard/wg0.conf | awk '{print $1}')
-        new_md5=$(get_config | tail -n1)
+    while sleep 15; do
+
+        curl_auth_header=''
+        if [[ "$WG_CONF_AUTH_TOKEN" ]]; then
+            curl_auth_header="Authorization: Bearer $WG_CONF_AUTH_TOKEN"
+        fi
+
+        response=$(
+            curl \
+                --connect-timeout 2 \
+                --max-time 5 \
+                --output $WG_CONF_TMP \
+                --silent  \
+                 -H "$curl_auth_header" \
+                $WG_CONF_URL
+        )
+
+        if [ $? -ne 0 ]; then
+            echo ""
+            echo "Unable to retrieve config"
+            echo $response
+            echo "Retriving in 5 seconds.."
+            sleep 5
+
+            continue
+        fi
+
+        current_md5=$(md5sum $WG_CONF | awk '{print $1}')
+        new_md5=$(md5sum "$WG_CONF_TMP" | awk '{print $1}')
 
         if [[ $current_md5 != $new_md5 ]]; then
+            echo ""
             echo "Wireguard new config received"
 
-            mv $WG_CONF_TMP /etc/wireguard/wg0.conf
+            mv $WG_CONF_TMP $WG_CONF
 
-            wg_exists=$(wg show wg0)
+            wg_exists=$(wg show $WG_INAME)
             if [ $? -eq 0 ]; then
                 wg_sync
             else
                 wg_up
             fi
 
-            echo "Waiting for config updates..."
+            echo "Waiting for config update.."
+            echo ""
         fi
     done
 else
