@@ -24,7 +24,10 @@ wg_up () {
             wg_up
         else
             echo "wireguard: unable to start"
-            exit 1;
+            if [[ ! "$WG_CONF_URL" ]]; then
+                echo "wireguard exiting with error"
+                exit 1;
+            fi
         fi
     fi
 }
@@ -117,21 +120,28 @@ if [[ "$WG_CONF_URL" ]]; then
             curl_auth_header="Authorization: Bearer $WG_CONF_AUTH_TOKEN"
         fi
 
-        response=$(
+        response_http_code=$(
             curl \
                 --connect-timeout 2 \
                 --max-time 5 \
                 --no-progress-meter \
                 --output $WG_CONF_TMP \
+                --write-out "%{http_code}" \
                  -H "$curl_auth_header" \
                 $WG_CONF_URL
         )
 
-        if [ $? -ne 0 ]; then
+        if [ $? -ne 0 ] || [[ $response_http_code != "200" ]]; then
             echo ""
-            echo "Wireguard unable to retrieve config. Server responded with:"
-            echo $response
+            echo "Wireguard unable to retrieve config from remote"
+            echo "Server responded with HTTP Code $response_http_code"
             echo "Retrying in $sleep_duration_s seconds.."
+
+            # Clean up temporary file
+            if [ -f $WG_CONF_TMP ]; then
+                rm $WG_CONF_TMP
+            fi
+
             sleep $sleep_duration_s
 
             continue
@@ -148,8 +158,6 @@ if [[ "$WG_CONF_URL" ]]; then
             echo ""
             echo "Wireguard new config received"
 
-            mv $WG_CONF_TMP $WG_CONF
-
             # Bring down the existing wireguard interface
             # so as to trigger existing PostDown commands.
             #
@@ -165,10 +173,14 @@ if [[ "$WG_CONF_URL" ]]; then
                 wg_down
             fi
 
+            wg_backup
+
+            mv $WG_CONF_TMP $WG_CONF
+
             wg_up
 
-            echo "Waiting for config update.."
             echo ""
+            echo "Next check for config update in $sleep_duration_s seconds"
         else
             # Clean up temporary file
             rm $WG_CONF_TMP
