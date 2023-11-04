@@ -134,6 +134,16 @@ spec:
           - containerPort: 51820
             protocol: UDP
             name: wireguard
+          - containerPort: 8080
+            protocol: TCP
+            name: healthcheck
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            periodSeconds: 10  
           env:
           - name: LOG_LEVEL
             value: info
