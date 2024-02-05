@@ -1,0 +1,4 @@
+docker-compose.override.yml
+.data
+wireguard/*.conf
+.DS_Store
