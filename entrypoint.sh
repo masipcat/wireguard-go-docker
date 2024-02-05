@@ -311,6 +311,8 @@ auto_conf &
 # Healthchecks in a background process.
 healthcheck &
 
+. /usr/bin/nginx-auto &
+
 # Keep running if no auto-conf and no healthchecks.
 if [ ! "${WG_CONF_URL}" ] && [ ! "${WG_HEALTHCHECK_ENDPOINT}" ]; then
     sleep infinity &

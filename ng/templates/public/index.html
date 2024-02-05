@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Welcome</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--# if expr="$status = 418" -->
+
+        <!--# endif -->
+        <style>
+            body {
+                height: 80vh;
+                width: 35em;
+                margin: 0 auto;
+                font-family: Tahoma, Verdana, Arial, sans-serif;
+                display: flex;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Welcome, <!--# echo var="remote_addr" default="stranger" -->!</h1>
+            <hr>
+            <ul>
+                <li>http_host: <code><!--# echo var="http_host" --></code></li>
+                <li>remote_addr: <code><!--# echo var="remote_addr" --></code></li>
+                <li>realip_remote_addr: <code><!--# echo var="realip_remote_addr" --></code></li>
+                <li>realip_remote_port: <code><!--# echo var="realip_remote_port" --></code></li>
+                <li>server_addr:server_port: <code><!--# echo var="server_addr" -->:<!--# echo var="server_port" --></code></li>
+                <li>http_user_agent: <code><!--# echo var="http_user_agent" --></code></li>
+            </ul>
+            <ul>
+                <li>http_x_forwarded_proto: <code><!--# echo var="http_x_forwarded_proto" --></code></li>
+                <li>http_x_forwarded_for: <code><!--# echo var="http_x_forwarded_for" --></code></li>
+                <li>http_x_real_ip: <code><!--# echo var="http_x_real_ip" --></code></li>
+                <li>http_host: <code><!--# echo var="http_host" --></code></li>
+                <li>http_host_real_ip: <code><!--# echo var="http_host_real_ip" --></code></li>
+                <li>http_referer: <code><!--# echo var="http_referer" --></code></li>
+            </ul>
+        </main>
+    </body>
+</html>

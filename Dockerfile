@@ -23,11 +23,27 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
     make && \
     make install
 
+COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
+
+
 FROM ${ARCH}alpine:${ALPINE_VERSION}
 
-RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2 curl
+RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2 curl \
+        wireguard-tools-doc tcpdump nmap-ncat nginx
 
-COPY --from=builder /usr/bin/wireguard-go /usr/bin/wg* /usr/bin/
+COPY --from=builder /usr/bin/wireguard-go /usr/bin/wg* /bin/gomplate /usr/bin/
+
+
+
+RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bk \
+    && mv /etc/nginx/http.d/default.conf /etc/nginx/http.d/default.conf.bk
+
+COPY ng /etc/ng
+COPY ng/nginx-auto.sh /usr/bin/nginx-auto
+
 COPY entrypoint.sh /entrypoint.sh
+
+RUN mkdir -p /data/ng
+VOLUME /data
 
 CMD ["/entrypoint.sh"]
