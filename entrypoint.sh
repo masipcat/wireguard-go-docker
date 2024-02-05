@@ -25,6 +25,8 @@ WG_DEBUG_VERBOSE=$([ "$LOG_LEVEL" == 'verbose'  ] && echo 1 || echo 0)
 wg_up () {
     debug wg_up "${WG_CONF}"
 
+    chmod 600 $WG_CONF
+
     wg-quick up $WG_CONF
 
     # Try restoring from a backup in case of error.
@@ -90,6 +92,8 @@ finish () {
 
 abort () {
     debug abort "$@"
+
+    wg_down
 
     [[ -z "$(jobs -p)" ]] || kill $(jobs -p)
 
@@ -291,10 +295,6 @@ trap finish SIGTERM SIGINT SIGQUIT SIGHUP
 # Ensure config directory exists.
 # This may occur when no wg config was given to start with
 # and will be retrieving it from `WG_CONF_URL` on load.
-#
-# TODO:
-#       - [?] Folder / File Permissions
-#             Warning: `/etc/wireguard/wg0.conf' is world accessible
 mkdir -p $WG_CONF_DIR
 
 # Start wireguard or fail if no config url specified.
