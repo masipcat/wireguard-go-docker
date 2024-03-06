@@ -28,5 +28,9 @@ jobs:
         run: |
           export VERSION=$(cat Dockerfile | grep 'wg_go_tag=' | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
 
+          docker buildx create \
+            --name container \
+            --driver=docker-container
+
           TAG=$VERSION make build_and_push
           TAG=latest make build_and_push
