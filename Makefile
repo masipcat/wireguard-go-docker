@@ -1,6 +1,11 @@
-.PHONY: build_and_push
+.PHONY: builx_container build_and_push
 
 DOCKER_REGISTRY ?= masipcat/wireguard-go
+
+builx_container:
+	docker buildx create \
+		--name container \
+		--driver=docker-container
 
 build_and_push:
 	docker buildx build \
