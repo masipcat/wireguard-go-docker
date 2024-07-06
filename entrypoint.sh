@@ -8,6 +8,9 @@ trap finish SIGTERM SIGINT SIGQUIT
 
 wg-quick up /etc/wireguard/wg0.conf
 
-# Inifinite sleep
+# Infinite sleep
 sleep infinity &
+
+# Health check
+/usr/bin/healthcheck &
 wait $!

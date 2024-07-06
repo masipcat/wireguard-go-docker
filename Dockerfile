@@ -22,11 +22,15 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
     make && \
     make install
 
+COPY healthcheck.go /go/src/healthcheck.go
+RUN go build -o /go/bin/healthcheck /go/src/healthcheck.go
+
 FROM alpine:${ALPINE_VERSION}
 
 RUN apk add --no-cache --update bash libmnl iptables openresolv iproute2
 
 COPY --from=builder /usr/bin/wireguard-go /usr/bin/wg* /usr/bin/
+COPY --from=builder /go/bin/healthcheck /usr/bin/healthcheck
 COPY entrypoint.sh /entrypoint.sh
 
 CMD ["/entrypoint.sh"]
