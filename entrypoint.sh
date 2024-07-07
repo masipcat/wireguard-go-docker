@@ -12,5 +12,8 @@ wg-quick up /etc/wireguard/wg0.conf
 sleep infinity &
 
 # Health check
-/usr/bin/healthcheck &
+if [[ -n "${ENABLE_HEALTHCHECK}" ]]; then
+    /usr/bin/healthcheck &
+fi
+
 wait $!
