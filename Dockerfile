@@ -23,7 +23,7 @@ RUN git clone https://git.zx2c4.com/wireguard-tools && \
     make install
 
 COPY healthcheck.go /go/src/healthcheck.go
-RUN go build -o /go/bin/healthcheck /go/src/healthcheck.go
+RUN go build -ldflags="-s -w" -o /go/bin/healthcheck /go/src/healthcheck.go
 
 FROM alpine:${ALPINE_VERSION}
 
