@@ -1,7 +1,7 @@
 ARG GOLANG_VERSION=1.20
 ARG ALPINE_VERSION=3.18
 
-FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} as builder
+FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 ARG wg_go_tag=0.0.20230223
 ARG wg_tools_tag=v1.0.20210914
