@@ -146,7 +146,7 @@ spec:
           - name: LOG_LEVEL
             value: info
           - name: ENABLE_HEALTHCHECK
-            value: true
+            value: "true"
           securityContext:
             capabilities:
               add:
